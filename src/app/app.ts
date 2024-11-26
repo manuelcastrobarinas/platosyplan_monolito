@@ -60,7 +60,7 @@ try {
       await server.start();
       dbConnection();
       console.log(`
-        -> API listen on ${CONFIG.app.gogoBackendPort}
+        -> API listen on ${CONFIG.app.platosyplan_port}
         -> Bot Server started 
       `);
     }
