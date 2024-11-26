@@ -34,7 +34,7 @@ export const RecipeSchema = new Schema({
     required: true,
   },
   ingredients: {
-    type: Object,
+    type: Array,
     required: true,
   },
   nutricional_table: {
@@ -42,11 +42,11 @@ export const RecipeSchema = new Schema({
     required: true,
   },
   utensils: {
-    type: Object,
+    type: Array,
     required: true,
   },
   steps: {
-    type: Object,
+    type: Array,
     required: true,
   },
   CreatedAt: {
