@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { RecipeController } from '../../services/controller/recipes';
 import { RoutesApp } from '../../core/routes';
 import { MulterMiddleware } from '../../middleware/multer';
+import { validateJwt } from '../../middleware/validate-jwt';
 
 export class RecipeRouter extends RoutesApp {
   public router: Router;
@@ -17,8 +18,8 @@ export class RecipeRouter extends RoutesApp {
   }
   
   protected setServiceRoutes(): void {
-    this.router.post('/create', this.multerMiddleware.multiple('images', 10),(req, res) => this.recipeController.create(req, res)); // Controlador que maneja la lógica posterior
+    this.router.post('/create', validateJwt, this.multerMiddleware.multiple('images', 10),(req, res) => this.recipeController.create(req, res)); // Controlador que maneja la lógica posterior
     // this.router.post('/create', this.multerMiddleware.single('image'),(req, res) => this.recipeController.create(req, res)); // Controlador que maneja la lógica posterior
-    this.router.get('/all',     this.recipeController.getAllRecipesList);
+    this.router.get('/all', this.recipeController.getAllRecipesList);
   }
 }

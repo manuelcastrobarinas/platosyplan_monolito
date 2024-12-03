@@ -4,6 +4,7 @@ export const RecipeSchema = new Schema({
   id: {
     type: String,
     required: true,
+    unique: true,
   },
   image: {
     type: String,
