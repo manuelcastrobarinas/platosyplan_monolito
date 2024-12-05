@@ -59,15 +59,14 @@ export class MulterMiddleware {
             message: 'Error al subir archivo',
             error: err.message || 'Error desconocido',
           });
-          return; // Asegúrate de finalizar aquí
+          return;
         }
-        return next(); // Añade return explícito aquí
+        return next();
       });
     };
   }
 
-  // Middleware para manejar subida de múltiples archivos
-  public multiple(fieldName: MulterFieldMultipleType, maxCount: number) {
+  public multiple(fieldName: MulterFieldMultipleType, maxCount: number) {   // Middleware para manejar subida de múltiples archivos
     return (req: Request, res: Response, next: NextFunction) => {
       this.upload.array(fieldName, maxCount)(req, res, (err: any) => {
         if (err) {
@@ -78,7 +77,7 @@ export class MulterMiddleware {
           console.log("error multer al subir diferentes archivos:", err);
         }
         console.log("esto es lo que le llega al request del multier multiple:", req.body);
-        return next(); // Añade return explícito aquí
+        return next();
       });
     };
   }
