@@ -29,7 +29,7 @@ export class UserController implements UserService<UserRespose> {
       const user_model  = await UserModel.create({id: crypto.randomUUID(), ...user});
       const token = await generateToken(user_model.id); // generacion de jwt    
       
-      return res.status(200).json({ok: true, message: 'crear usuario!!', user_model, token});
+      return res.status(200).json({ok: true, message: 'crear usuario!!', user: user_model, token});
     } catch (error) {
       console.error("error creando el usuario", error);
       return res.status(400).json({ok: false, error_message: `error al crear el usuario: ${error}`});
@@ -41,10 +41,10 @@ export class UserController implements UserService<UserRespose> {
     const { email, password } = req.body;
     try {
       const find_user = await UserModel.findOne({email});
-      if (!find_user) return res.status(404).json({ok: false, error_message: 'email no encontrado'});
+      if (!find_user) return res.status(400).json({ok: false, error_message: 'email no encontrado'});
       
       const validPassword = bcrypt.compareSync(password, find_user.password);
-      if (!validPassword) return res.status(404).json({ok: false, error_message: 'la contraseña no es valida'});
+      if (!validPassword) return res.status(400).json({ok: false, error_message: 'la contraseña no es valida'});
   
       const token = await generateToken(find_user.id);
       return res.status(200).json({ ok: true, message: 'usuario logeado', user: find_user, token});
@@ -54,17 +54,19 @@ export class UserController implements UserService<UserRespose> {
     }
   }
   
-  async renewToken(req:Request, res: Response) {
-    try {
-      const uid = req.params.uid;
-      const token = await generateToken(uid);
-      const user = await UserModel.findById(uid);
-      if (!user) return res.status(400).json({ok:false, error_message: 'el usuario no ha sido encontrado'});
-      return res.status(200).json({ ok: true, user: user, message: 'token renovado', token: token});    
+  public async getUserCredentials(req: Request, res: Response): Promise<Response<User>> {
+    try {  
+      const userId = req.headers.id as string;
+      if (!userId) return res.status(400).json({ ok: false, error_message: 'No se encontró el ID del usuario en la petición' });
+
+      const user = await UserModel.findOne({id: userId});
+      if (!user) return res.status(404).json({ ok: false, error_message: 'Usuario no encontrado' });
+
+      const token = await generateToken(userId);
+      return res.status(200).json({ ok: true, message: 'se han obtenido las credenciales del usuario con exito', user: user, token: token });
     } catch (error) {
-      console.error('error al renovar el token', error);
-      return res.status(400).json({ok:false, error_message:`no se ha podido renovar el token ${error}`});
+      console.error('Error al obtener las credenciales del usuario:', error);
+      return res.status(400).json({ ok: false, error_message: `Error al obtener las credenciales del usuario ${error}` });
     }
   }
-
 }
