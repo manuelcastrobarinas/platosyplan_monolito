@@ -1,4 +1,4 @@
-dentro de la carpeta app/ crear el archivo de configuración
+dentro de la carpeta src/ crear el archivo de configuración
 
 export const CONFIG = {
   db: process.env.DB_CONECTION || '<entorno_base_datos>',
