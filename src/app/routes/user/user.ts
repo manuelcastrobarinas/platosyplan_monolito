@@ -33,6 +33,7 @@ export class AuthRouter extends RoutesApp {
       ],
       this.userController.login
     ),
-    this.router.get('/me', validateJwt, this.userController.getUserCredentials)
+    this.router.get('/me', validateJwt, this.userController.getUserCredentials),
+    this.router.patch('/update', validateJwt, this.userController.update)
   }
 }

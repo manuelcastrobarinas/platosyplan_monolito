@@ -1,44 +1,68 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
+import { IUser } from "../services/interfaces/user";
 
-export const UserSchema = new Schema({
+interface IUserDocument extends IUser, Document {}
+
+export const UserSchema = new Schema<IUserDocument>({
   id: {
     type: String,
-    required: true,
     unique: true,
   },
   name: {
     type: String,
-    required: true
+    required: function (this: IUserDocument) {
+      return this.isNew;
+    }
   },
   email: {
     type: String,
-    required: true,
-    unique: true
+    required: function (this: IUserDocument) {
+      return this.isNew;
+    },
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: function (this: IUserDocument) {
+      return this.isNew;
+    },
   },
   phone: {
     type: String,
-    required: true
+    required: function (this: IUserDocument) {
+      return this.isNew;
+    },
+    unique:true,
   },
   CreatedAt: {
     type: Date,
-    required: true,
-    default: new Date()
+    required: function (this: IUserDocument) {
+      return this.isNew;
+    },
+    default: new Date(),
   },
   UpdatedAt: {
     type: Date,
     required: true,
-    default: new Date()
-  }, 
+    default: new Date(),
+  },
 });
 
+// Método para excluir campos sensibles en la respuesta JSON
 UserSchema.method('toJSON', function () {
   const { __v, _id, password, ...data } = this.toObject();
-  data.uid = _id;
-  return data
+  data.uid = _id; // Cambia _id a uid
+  return data;
 });
 
+
+UserSchema.pre('save', function (next) {
+  if (!this.isNew) {
+    this.UpdatedAt = new Date();
+  }
+  next();
+});
+
+
 export const UserModel = model('User', UserSchema);
+

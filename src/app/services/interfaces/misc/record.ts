@@ -1,7 +1,6 @@
-export interface RecordFields<Tid> { //interface que manejara los datos primordiales
-    id?: Tid,
+export interface RecordFields { //interface que manejara los datos primordiales
     CreatedAt: Date;
     UpdatedAt: Date;
 }
 
-export type RowRecord<Tid , TRecord > = TRecord & RecordFields<Tid>;
+export type RowRecord<TRecord> = TRecord & RecordFields;
