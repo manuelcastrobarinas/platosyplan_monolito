@@ -9,12 +9,39 @@ export type UserRespose = CustomResponse<User>;
 
 export class UserController implements UserService<UserRespose> {
   
+  public async update(req: Request, res: Response): Promise<Response> {
+    const id = req.headers.id as string;
+    const { name, phone, password, email } = req.body;
+
+    try {
+
+    let update_data: Partial<User> = {}; //CREA UN OBJETO DE TIPO USUARIO Y CONVIERTE LOS PARAMETROS EN OPCIONALES
+    
+    if (name?.trim())   update_data.name      = name.trim();
+    if (phone?.trim())  update_data.password  = phone.trim();
+    if (email?.trim())  update_data.email     = email.trim();
+    if (password && password.trim().isNotEmpty) {
+      const salt:string = bcrypt.genSaltSync(10);
+      update_data.password = bcrypt.hashSync(password, salt);
+    }
+    
+      const updated_user = await UserModel.findOneAndUpdate({id:id}, update_data, {new: true, runValidators: true});
+      if (!updated_user) return res.status(400).json({ok: false, error_message: 'Usuario no encontrado'});
+      return res.status(200).json({ ok: true, message: 'usuario actualizado con exito', user: updated_user});
+    } catch (error) {
+      console.error('Error actualizando el usuario', error);
+      return res.status(400).json({ok: false, error_message: `Error al actualizar el usuario: ${error}`});
+    }
+  }
+  
   public async create(req: Request, res: Response) : Promise<UserRespose> {
-    let { email, password } : { email:string, password:string } = req.body;
+    let { email, password, phone } : { email:string, password:string, phone } = req.body;
      
     try {
-      const find_email : User|null = await UserModel.findOne({email});;
+      const find_email  : User|null = await UserModel.findOne({email});
       if (find_email) return res.status(400).json({ok: false, error_message: 'este correo ya esta registrado'});
+      const find_phone  : User|null = await UserModel.findOne({phone});
+      if (find_phone) return res.status(400).json({ok: false, error_message: 'este numero de telefono ya esta registrado'});
       
       const salt = bcrypt.genSaltSync(10);
       password = bcrypt.hashSync(password, salt);
