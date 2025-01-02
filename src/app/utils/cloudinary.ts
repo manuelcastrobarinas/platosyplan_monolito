@@ -16,7 +16,7 @@ export class CloudinaryService {
     console.log("hola mundo entro");
     try {
       const result = await cloudinary.uploader.upload(filePath, {
-        folder: 'uploads', // Opcional: Especificar carpeta en Cloudinary
+        folder: 'platosyplan', // Opcional: Especificar carpeta en Cloudinary
       });  
       // Elimina el archivo local después de subirlo
       await fs.unlink(filePath);

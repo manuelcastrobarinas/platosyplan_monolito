@@ -8,26 +8,26 @@ export interface DifficultyRecipeType {
 };
 
 export interface IngredientRecipe {
-  image : string,
+  image? : string,
   name  : string,
   units : number,
 };
 
-export interface NutricionalTableElement {
+export interface NutritionalTableElement {
   name    : string,
   amount  : number
 };
 
-export interface Nutricional_table_Recipe {
-  calories        : NutricionalTableElement, 
-  fat             : NutricionalTableElement, 
-  satured_fat     : NutricionalTableElement, 
-  carbohidrate    : NutricionalTableElement, 
-  sugar           : NutricionalTableElement, 
-  dietary_fiber   : NutricionalTableElement, 
-  protein         : NutricionalTableElement, 
-  cholesterol     : NutricionalTableElement, 
-  sodium          : NutricionalTableElement, 
+export interface Nutritional_table_Recipe {
+  calories        : NutritionalTableElement, 
+  fat             : NutritionalTableElement, 
+  satured_fat     : NutritionalTableElement, 
+  carbohidrate    : NutritionalTableElement, 
+  sugar           : NutritionalTableElement, 
+  dietary_fiber   : NutritionalTableElement, 
+  protein         : NutritionalTableElement, 
+  cholesterol     : NutritionalTableElement, 
+  sodium          : NutritionalTableElement, 
 };
 
 export interface UtensilsRecipe {
@@ -43,20 +43,22 @@ export interface CookingSteps {
 }
 
 export interface Recipe {
-  image : string,
-  name  : string,
-  create_region : string,
+  user_id : string,
+  image   : string,
+  name    :  string,
+  category      : string,
   calification  : number,
   time_create   : number,
   difficulty    : DifficultyRecipeType,   
   description   : string,
+  active        : boolean,
   ingredients   : IngredientRecipe[],
-  nutricional_table : Nutricional_table_Recipe,
+  nutricional_table : Nutritional_table_Recipe,
   utensils          : UtensilsRecipe[],
   steps             : CookingSteps[],
 };
 
-export type RecipeRecord<TId> = RowRecord<TId, Recipe>;
+export type RecipeRecord = RowRecord<Recipe>;
 export type CustomResponse<TRespose> = void | Response | TRespose;
 
 export interface RecipeService<TResponse> {

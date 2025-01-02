@@ -12,11 +12,13 @@ export class RecipeController implements RecipeService<ReportRespose> {
   constructor() {}
   public async create(req: Request, res: Response): Promise<ReportRespose> {
 
+    try {
     const imagespath: string[] = req.body.imagePaths;
     if (!imagespath || imagespath.length == 0) return res.status(400).json({ ok: false,  error_message: 'No se encontraron las imagenes en la solicitud.'});
     if (!req.body.steps || !Array.isArray(req.body.steps) || req.body.steps.length === 0) return res.status(400).json({ ok: false, error_message: "Los pasos de la receta son requeridos."});
+    
+    const  user_id: string  = req.headers.id!.toString();
   
-    try {
       let imageLinks: string[] = [];
       const cloudinaryService: CloudinaryService = new CloudinaryService();
       
@@ -46,9 +48,10 @@ export class RecipeController implements RecipeService<ReportRespose> {
       });
 
       const recipe: Recipe = {
-        image : principal_image!,
-        name  : req.body.name,
-        create_region : req.body.create_region,
+        user_id : user_id,
+        image   : principal_image!,
+        name    : req.body.name,
+        category : req.body.category,
         calification  : req.body.calification,
         time_create   : req.body.time_create,
         difficulty    : req.body.difficulty,
@@ -56,7 +59,8 @@ export class RecipeController implements RecipeService<ReportRespose> {
         ingredients   : req.body.ingredients,
         nutricional_table : req.body.nutricional_table,
         utensils          : req.body.utensils,
-        steps         : final_steps
+        steps         : final_steps,
+        active        : true
       }
 
       const  recipe_model_database:Recipe = await RecipeModel.create({
