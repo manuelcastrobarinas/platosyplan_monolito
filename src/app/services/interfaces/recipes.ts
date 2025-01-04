@@ -64,4 +64,6 @@ export type CustomResponse<TRespose> = void | Response | TRespose;
 export interface RecipeService<TResponse> {
   create(req: Request, res: Response): Promise<CustomResponse<TResponse>>;
   getAllRecipesList(req: Request, res: Response) : Promise<CustomResponse<TResponse>>;
+  getMyRecipes(req:Request, res: Response)  : Promise<CustomResponse<Response<Recipe[]>>>;
+  ChangeActiveRecipe(req:Request, res:Response)  : Promise<CustomResponse<TResponse>>;
 }

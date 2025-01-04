@@ -21,5 +21,7 @@ export class RecipeRouter extends RoutesApp {
     this.router.post('/create', validateJwt, this.multerMiddleware.multiple('images', 10),(req, res) => this.recipeController.create(req, res)); // Controlador que maneja la lógica posterior
     // this.router.post('/create', this.multerMiddleware.single('image'),(req, res) => this.recipeController.create(req, res)); // Controlador que maneja la lógica posterior
     this.router.get('/all', this.recipeController.getAllRecipesList);
+    this.router.get('/myrecipes', validateJwt ,this.recipeController.getMyRecipes);
+    this.router.patch('/active', validateJwt, this.recipeController.ChangeActiveRecipe);
   }
 }
